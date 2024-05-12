@@ -5,11 +5,11 @@ import styles from './page.module.css'
 
 export default function Home() {
 
-    const [arr, SetArr] = useState(["", "", "", "", "", "", "", "", ""])
-    const [isX, SetIsX] = useState(true)
-    const [winner, SetWinner] = useState(false)
+    const [arr, SetArr] = useState<string[]>(["", "", "", "", "", "", "", "", ""])
+    const [isX, SetIsX] = useState<boolean>(true)
+    const [winner, SetWinner] = useState<boolean>(false)
 
-    const clickk = (index: number) => {
+    const clickk = (index: number): void => {
 
         if (winner) return
 
@@ -34,7 +34,7 @@ export default function Home() {
 
     }, [isX])
 
-    const checkWinner = () => {
+    const checkWinner = (): string => {
 
         const ans = [
             [0, 1, 2],
