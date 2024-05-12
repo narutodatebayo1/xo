@@ -1,95 +1,110 @@
-import Image from 'next/image'
+"use client"
+
+import { useEffect, useState } from 'react'
 import styles from './page.module.css'
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+
+    const [arr, SetArr] = useState(["", "", "", "", "", "", "", "", ""])
+    const [isX, SetIsX] = useState(true)
+    const [winner, SetWinner] = useState(false)
+
+    const clickk = (index: number) => {
+
+        if (winner) return
+
+        if (arr[index] != "") return
+
+        SetArr(prevArr => {
+            const newArr = prevArr
+            newArr[index] = isX ? "x" : "o"
+            return newArr
+        })
+        SetIsX(!isX)
+
+    }
+
+    useEffect(() => {
+
+        const result = checkWinner()
+        if (result != "") {
+            // alert(result)
+            SetWinner(true)
+        }
+
+    }, [isX])
+
+    const checkWinner = () => {
+
+        const ans = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ]
+
+        let res = ""
+
+        ans.forEach(pattern => {
+            if (arr[pattern[0]] != "" &&
+                arr[pattern[0]] == arr[pattern[1]] &&
+                arr[pattern[1]] == arr[pattern[2]]
+            ) {
+                res = arr[pattern[0]]
+            }
+        });
+
+        return res
+    }
+
+    return (
+        <div className={styles.container}>
+            <div className={styles.box}>
+                <Box symbol={arr[0]} OnClick={() => clickk(0)} />
+                <Box symbol={arr[1]} OnClick={() => clickk(1)} />
+                <Box symbol={arr[2]} OnClick={() => clickk(2)} />
+
+                <Box symbol={arr[3]} OnClick={() => clickk(3)} />
+                <Box symbol={arr[4]} OnClick={() => clickk(4)} />
+                <Box symbol={arr[5]} OnClick={() => clickk(5)} />
+
+                <Box symbol={arr[6]} OnClick={() => clickk(6)} />
+                <Box symbol={arr[7]} OnClick={() => clickk(7)} />
+                <Box symbol={arr[8]} OnClick={() => clickk(8)} />
+            </div>
         </div>
-      </div>
+    )
+}
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+interface BoxProps {
+    symbol: string,
+    OnClick(): void
+}
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+function Box(props: BoxProps) {
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    return (
+        <div onClick={props.OnClick}>
+            {props.symbol == "x" ?
+                <div className={styles.cross}>
+                    <div></div>
+                    <div></div>
+                </div>
+                :
+                <div></div>
+            }
+            {props.symbol == "o" ?
+                <div className={styles.dot}>
+                    <div></div>
+                    <div></div>
+                </div>
+                :
+                <div></div>
+            }
+        </div>
+    )
 }
